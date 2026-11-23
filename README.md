@@ -46,7 +46,7 @@ Invalid input (letters or symbols instead of a number) is handled with `try` and
 - Exception handling with `try` / `except`
 - Loops with `while True`
 
-## Ideas for improvement
+## Try to do those :
 
 - Reject numbers outside the range 1 to 200
 - Add a "play again?" option
