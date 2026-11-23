@@ -1,40 +1,37 @@
 # Number Guessing Game
 
-A number guessing game in Python with two versions: a **command-line version** and a **graphical version** built with Tkinter. The computer picks a secret number between 1 and 200, and you try to find it using "too small" / "too big" hints.
+A number guessing game in Python, built in **three versions** that show how the project grew: a basic command-line game, an improved command-line game, and a graphical version built with Tkinter. The computer picks a secret number between 1 and 200, and you try to find it using "too small" / "too big" hints.
 
 Built by Bilel K. while finishing [CS50P](https://cs50.harvard.edu/python/) (Harvard's Introduction to Programming with Python).
 
 ![Graphical version of the game](images/interface_with_ai.png)
 
-## Two versions
+## The three versions
 
-| | CLI version | GUI version |
-|---|---|---|
-| File | `guessing_game.py` | `interface_with_ai.py` |
-| Interface | Terminal | Tkinter window |
-| Attempts | Unlimited | 10 attempts, shown as dots |
-| Input check | Rejects non-numbers | Rejects non-numbers and numbers outside 1-200 |
-| Hints | Too small / too big | Too small / too big, plus the remaining range |
-| Restart | Run the script again | "New game" button |
+| | Version 1: basic | Version 2: improved | Version 3: GUI |
+|---|---|---|---|
+| File | `guessing-game.py` | `improve.py` | `interface_with_ai.py` |
+| Interface | Terminal | Terminal | Tkinter window |
+| Input check | Rejects non-numbers | Rejects non-numbers and numbers outside 1-200 | Rejects non-numbers and numbers outside 1-200 |
+| Attempts | Unlimited | 10 | 10, shown as dots |
+| Play again | Run the script again | "yes or no" prompt | "New game" button |
+| On a win | Number of guesses and the list of guesses | Number of guesses | Number of guesses and a colored history |
+| Extra | | | Shows the remaining range, e.g. "between 126 and 129" |
 
 ## Getting started
 
 **Requirements:** Python 3. Tkinter is included with the standard Python installer on Windows and macOS. On some Linux distributions, install it with `sudo apt install python3-tk`.
 
 ```bash
-git clone https://github.com/YOUR-USERNAME/guessing-game.git
+git clone https://github.com/bi1e1/guessing-game.git
 cd guessing-game
 ```
 
-Run the command-line version:
+Run the version you want:
 
 ```bash
-python guessing_game.py
-```
-
-Run the graphical version:
-
-```bash
+python guessing-game.py
+python improve.py
 python interface_with_ai.py
 ```
 
@@ -43,41 +40,30 @@ python interface_with_ai.py
 1. The game picks a secret number from 1 to 200.
 2. Type a guess and press Enter.
 3. The game tells you whether your guess is too small or too big.
-4. Keep guessing until you find the number.
+4. Keep guessing until you find the number. In versions 2 and 3, you have 10 attempts.
 
-In the GUI version, you have 10 attempts. Each guess is saved as a colored chip: amber means too small, red means too big, and green means correct.
+In the GUI, each guess is saved as a colored chip: amber means too small, red means too big, and green means correct. Invalid input does not use an attempt.
 
-### Example run (CLI)
+### Example run (version 2)
 
 ```
-Give me your guess ::: 20
-Your guess is too small !!!
 Give me your guess ::: 100
-Your guess is too small !!!
-Give me your guess ::: 150
-Your guess is too small !!!
-Give me your guess ::: 200
 Your guess is too big !!!
-Give me your guess ::: 180
+Give me your guess ::: 50
 Your guess is too small !!!
-Give me your guess ::: 190
-Your guess is too big !!!
-Give me your guess ::: 185
-Your guess is too big !!!
-Give me your guess ::: 183
-Your guess is too small !!!
-Give me your guess ::: 184
-Bravo, Your guess is correct after 9 guesses ::: [20, 100, 150, 200, 180, 190, 185, 183, 184]
+Give me your guess ::: 75
+Bravo, you finish after 3 guesses !!!
+Do you want to play again ? yes or no ::: no
 ```
 
-**Tip:** always guess the middle of the remaining range (binary search). With this strategy you can find any number from 1 to 200 in at most 8 guesses.
+**Tip:** always guess the middle of the remaining range (binary search). With this strategy you can find any number from 1 to 200 in at most 8 guesses, so 10 attempts is enough.
 
 ## How it works
 
-Both versions share the same core idea: compare the player's guess with the secret number and return one of three results.
+All three versions share the same core idea: compare the player's guess with the secret number and return one of three results.
 
 ```python
-def hints(player, secret):
+def hint(player, secret):
     if secret > player:
         return 'small'
     elif secret < player:
@@ -86,20 +72,37 @@ def hints(player, secret):
         return 'right'
 ```
 
-This function only compares and returns a value. It does not print or read input, so it is easy to reuse and to test.
+This function only compares and returns a value. It does not print or read input, so it is easy to reuse and to test. (Version 1 calls it `hints`.)
 
-### CLI version
+### Version 1: basic (`guessing-game.py`)
 
 | Function | Role |
 |---|---|
-| `main()` | Picks the secret number with `random.randint(1, 200)` and runs the game loop. It reads each guess with `input()` and handles invalid input with `try` / `except ValueError`. |
+| `main()` | Picks the secret number with `random.randint(1, 200)`, reads each guess with `input()`, and handles invalid input with `try` / `except ValueError`. |
 | `rounding()` | Stores each guess in a list with `append()`. |
-| `hints()` | Compares the guess with the secret number and returns `'small'`, `'big'` or `'right'`. |
-| `result()` | Prints the message the player sees: the hint, or the winning message with the list of all guesses. |
+| `hints()` | Returns `'small'`, `'big'` or `'right'`. |
+| `result()` | Prints the hint, or the winning message with the list of all guesses. |
 
 The loop runs until the player guesses correctly, then ends with `sys.exit()`.
 
-### GUI version
+### Version 2: improved (`improve.py`)
+
+What changed from version 1:
+
+- **Range check:** numbers below 1 or above 200 are rejected with a message and do not count as a guess.
+- **Attempt limit:** the game ends with "Game Over" after 10 guesses.
+- **Play again:** after a win or a loss, the player is asked whether to start a new game.
+- **Clean exit:** answering "no" ends the program with `sys.exit()`.
+
+| Function | Role |
+|---|---|
+| `main()` | Picks the secret number and runs the game loop. An inner loop keeps asking until the guess is a number from 1 to 200, and `try` / `except ValueError` catches text input. It ends the game after 10 guesses. |
+| `round()` | Stores each valid guess in a list. |
+| `hint()` | Returns `'small'`, `'big'` or `'right'`. |
+| `result()` | Prints the hint, or the winning message and the number of guesses, then asks to play again. |
+| `again()` | Asks "yes or no". "yes" starts a new game by calling `main()`, and "no" exits. |
+
+### Version 3: GUI (`interface_with_ai.py`)
 
 The GUI is a class, `GuessGame`, that extends `tkinter.Tk` and reuses the same hint logic.
 
@@ -111,18 +114,19 @@ The GUI is a class, `GuessGame`, that extends `tkinter.Tk` and reuses the same h
 | `draw_dots()` | Draws one dot per attempt used (blue while playing, green on a win, red on a loss). |
 | `add_chip()` | Adds the guess to the history, colored by its result. |
 | `finish()` | Ends the round by disabling the input field. |
-| `show_error()` | Shows an error message when the input is not a whole number from 1 to 200. Invalid input does not use an attempt. |
+| `show_error()` | Shows an error message when the input is not a whole number from 1 to 200. |
 
-The game also narrows the range as you play. After a "too small" answer the lower bound moves up, and after a "too big" answer the upper bound moves down, so the message "The number is between X and Y" always shows what is still possible.
+The game also narrows the range as you play. After a "too small" answer the lower bound moves up, and after a "too big" answer the upper bound moves down, so the message "The number is between X and Y" always shows what is still possible. When you lose, the game reveals the secret number.
 
 ## Project structure
 
 ```
 guessing-game/
-├── guessing_game.py        # command-line version
-├── guessing_game_gui.py    # Tkinter version
+├── guessing-game.py        # version 1: basic command-line game
+├── improve.py              # version 2: improved command-line game
+├── interface_with_ai.py    # version 3: Tkinter GUI
 ├── images/
-│   └── gui-screenshot.png
+│   └── interface_with_ai.png
 └── README.md
 ```
 
@@ -132,17 +136,18 @@ guessing-game/
 - Lists and `append()`
 - The `random` module
 - Exception handling with `try` / `except`
-- Loops and conditionals
+- Loops and conditionals, including nested loops for input validation
 - Basic GUI programming with Tkinter (classes, widgets, events)
 
 ## Known limitations and next steps
 
-- [ ] The CLI version accepts any integer, so enforce the 1-200 range there as well
-- [ ] Add a "play again?" option and an attempt limit to the CLI version
+- [ ] In version 2, re-ask the "play again" question until the answer is "yes" or "no". Right now any other answer returns to the finished game
+- [ ] In version 2, replace the recursive `main()` call in `again()` with a loop
+- [ ] In version 2, rename `round()`, because it overrides Python's built-in `round()`
+- [ ] In version 2, show the secret number when the game is lost
 - [ ] Add unit tests for the hint function with `pytest`
-- [ ] Move the shared hint logic into one module used by both versions
+- [ ] Move the shared hint logic into one module used by all versions
 
 ## About
 
-The CLI version and the game logic are my own work, written while learning Python with CS50P. The graphical version was created with the help of an AI assistant, built on top of that logic.
-
+Versions 1 and 2 and the game logic are my own work, written while learning Python with CS50P. The graphical version was created with the help of an AI assistant, built on top of that logic.
