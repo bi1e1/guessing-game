@@ -1,23 +1,57 @@
-# guessing-game
+# Number Guessing Game
 
-I build this with python 
+A command-line number guessing game written in Python, built while finishing CS50P (Harvard's Introduction to Programming with Python).
 
-right now I am finishing CS50P from Harvard 
+The computer picks a secret number between 1 and 200, and you try to guess it. After every guess you get a hint: too big or too small.
 
-this game its store a secret number in a variable called secret randomly from 1 to 200 ...
+## Demo
 
-and get the guess from the player with a function called input() stored in a variable called player ...
+![Gameplay screenshot](images/gameplay.png)
 
-I create a function called hints() to give the player hints like 'Your guess is too big !!!' and 'Your guess is too small !!!' etc ...
+```
+Give me your guess ::: abc
+!!! Put only a number from 1 to 200 !!!
+Give me your guess ::: 100
+Your guess is too small !!!
+Give me your guess ::: 200
+Your guess is too big !!!
+Give me your guess ::: 184
+Bravo, Your guess is correct after 3 guesses ::: [100, 200, 184]
+```
 
+## How to run
 
-also I create a function to store the guesses of the user inside a list with append() ---> guess.append(player) 
+You need Python 3 installed.
 
-finally I create a function called result() to print the msg of the system on the screen of the player ...
+```
+python guessing_game.py
+```
 
-and the function main is manage the system by store the main variable inside one place and I use the exceptions ' The keyword try and except ' to handling the ValueError ...
+## How it works
 
-Thank you ...
+| Function | What it does |
+|----------|--------------|
+| `main()` | Runs the game loop: picks the secret number, reads the player's guess with `input()`, and calls the other functions. |
+| `hints()` | Compares the guess with the secret number and returns `'small'`, `'big'`, or `'right'`. |
+| `rounding()` | Stores each guess in a list using `append()`. |
+| `result()` | Prints the message the player sees, such as "Your guess is too big !!!" or the winning message with the list of guesses. |
 
+Invalid input (letters or symbols instead of a number) is handled with `try` and `except` to catch the `ValueError`, so the game doesn't crash.
+
+## What I practiced
+
+- Functions and return values
+- Lists and `append()`
+- The `random` module
+- Exception handling with `try` / `except`
+- Loops with `while True`
+
+## Ideas for improvement
+
+- Reject numbers outside the range 1 to 200
+- Add a "play again?" option
+- Limit the number of guesses
+
+Thank you for checking out my project!
 
 
