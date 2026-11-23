@@ -46,7 +46,7 @@ def again():
         again = input('Do you want to play again ? yes or no ::: ')
         if again == 'yes':
             main()
-        elif again == 'no' or again == 'NO' or again == 'nO':
+        elif again == 'no':
             sys.exit()
         else:
             print('we accept only yes or no min not cap !!!!')
