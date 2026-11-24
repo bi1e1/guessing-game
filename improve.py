@@ -23,6 +23,10 @@ def main():
 
 def round(player, guess):
     guess.append(player)
+    if player in guess :
+        return True
+    else:
+        return False
 
 def hint(player, secret):
     if secret > player :
@@ -35,10 +39,13 @@ def hint(player, secret):
 def result(x, guess):
     if x == 'small':
         print('Your guess is too small !!!')
+        return True
     elif x == 'big':
         print('Your guess is too big !!!')
+        return True
     else:
         print(f'Bravo, you finish after {len(guess)} guesses !!!')
+        return True
         again()
 
 def again():
@@ -46,7 +53,7 @@ def again():
         again = input('Do you want to play again ? yes or no ::: ')
         if again == 'yes':
             main()
-        elif again == 'no':
+        elif again == 'no' or again == 'NO' or again == 'nO':
             sys.exit()
         else:
             print('we accept only yes or no min not cap !!!!')
